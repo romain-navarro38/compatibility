@@ -108,10 +108,10 @@ class MainWindow(QWidget):
 if __name__ == '__main__':
     import sys
     from PySide6.QtWidgets import QApplication
-    from src.api.settings import RESSOURCE_DIR
+    from src.api.settings import BASE_DIR
 
     app = QApplication()
-    app.setWindowIcon(QIcon(QPixmap(RESSOURCE_DIR / 'icon.ico')))
+    app.setWindowIcon(QIcon(QPixmap(BASE_DIR / 'icon.ico')))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

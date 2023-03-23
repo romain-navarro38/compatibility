@@ -3,7 +3,7 @@ import sys
 from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtWidgets import QApplication
 
-from src.api.settings import SETTING_JSON, write_json_settings, DEFAULT_SETTING, RESSOURCE_DIR
+from src.api.settings import SETTING_JSON, write_json_settings, DEFAULT_SETTING, BASE_DIR
 from src.windows.main_window import MainWindow
 
 
@@ -13,7 +13,7 @@ def check_start():
 
 def launch_app():
     app = QApplication()
-    app.setWindowIcon(QIcon(QPixmap(RESSOURCE_DIR / 'icon.ico')))
+    app.setWindowIcon(QIcon(QPixmap(BASE_DIR / 'icon.ico')))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

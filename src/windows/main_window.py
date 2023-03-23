@@ -15,6 +15,8 @@ class MainWindow(QWidget):
         self.setup_ui()
 
     def setup_ui(self):
+        """Setting up the ui"""
+
         self.create_widgets()
         self.modify_widgets()
         self.create_layouts()
@@ -59,6 +61,7 @@ class MainWindow(QWidget):
         self.le_shocks2.textChanged.connect(self.calculation_deviation)
 
     def display_settings(self):
+        """Retrieves and displays the parameters associated with the selected analysis in the combobox"""
         settings_of_analysis = get_default_analysis_settings()
 
         self.cbx_analysis.setCurrentText(settings_of_analysis["analysis"])
@@ -72,19 +75,30 @@ class MainWindow(QWidget):
         self.la_value2.setText(settings_of_analysis["label2"])
 
     def calculation_deviation(self):
+        """If data present, calculation and display of the result of the normalized deviation"""
+
         if not self.verification_widget_filling():
             self.display_result(-1.0)
             return
+
+        deviation = normalised_deviation(**self.data_transformation())
+        self.display_result(deviation)
+
+    def data_transformation(self) -> dict:
+        """Transforms the data according to the selected analysis to be compatible
+        with the calculation of the normalized deviation"""
 
         shocks1 = float(self.le_shocks1.text().replace(',', '.'))
         shocks2 = float(self.le_shocks2.text().replace(',', '.'))
         if self.cbx_analysis.currentText() == "Tritium":
             shocks1 *= 60
             shocks2 *= 60
-        deviation = normalised_deviation(shocks1, shocks2)
-        self.display_result(deviation)
+
+        return {"shocks1": shocks1, "shocks2": shocks2}
 
     def display_result(self, result: float):
+        """Changes the interface according to the result of the normalized deviation"""
+
         if result == -1.0:
             self.la_result.setText("")
         elif result > 1:
@@ -95,13 +109,18 @@ class MainWindow(QWidget):
             self.la_result.setText("OK")
 
     def analysis_changed(self):
+        """Changes the default analysis in the settings, deletes user entries and the result.
+        Displays the settings for the selected analysis."""
+
         set_default_analysis_settings(str(self.cbx_analysis.currentIndex()))
         self.le_shocks1.setText("")
         self.le_shocks2.setText("")
+        self.la_result.setText("")
         self.display_settings()
-        self.calculation_deviation()
 
     def verification_widget_filling(self) -> bool:
+        """Checking the presence of data for the calculation"""
+
         return bool(self.le_shocks1.text() and self.le_shocks2.text())
 
 
